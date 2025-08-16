@@ -7,7 +7,7 @@ export function Navbar() {
         <div className="fs-4 fw-semibold">Beyond Events</div>
       </Link>
       <div className="d-flex gap-4 fs-6">
-        <a href="#" className="text-decoration-none link-dark">
+        <a href="/createEvent" className="text-decoration-none link-dark">
           Create Event
         </a>
         <a href="#" className="text-decoration-none link-dark">

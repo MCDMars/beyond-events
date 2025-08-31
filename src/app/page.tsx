@@ -1,8 +1,26 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { SearchBar } from "./components/SearchBar";
 import { EventCard } from "./components/EventCard";
 
 export default function Home() {
+  useEffect(() => {
+    fetch("http://localhost:8080/api/events")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok " + res.statusText);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Events from backend:", data);
+      })
+      .catch((error) => {
+        console.error("Error fetching events:", error);
+      });
+  }, []);
+
   return (
     <main className="min-vh-100 bg-white d-flex flex-column align-items-center font-sans">
       <div className="w-100" style={{ maxWidth: 1900 }}>

@@ -7,7 +7,7 @@ export default function EventPage() {
 
         <div className="px-4 pt-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <div className="fs-4 fw-semibold">Event Title<span className="fs-6 fw-normal ms-2">Organizer</span></div>
+            <div className="fs-4 fw-semibold">Event Title <span className="fs-6 fw-normal ms-2">Organizer</span></div>
           </div>
           <div className="row g-4">
             {/* Left: Image and Interactions */}

@@ -1,8 +1,22 @@
 import Link from "next/link";
 
-export function EventCard({ small }: { small?: boolean }) {
+type EventCardProps = {
+  title: string;
+  startTime: string;
+  endTime: string;
+  small?: boolean;
+}
+
+export function EventCard(
+  // Events API parameters
+  { title,
+    startTime,
+    endTime,
+    small,
+  }: EventCardProps
+) {
   return (
-    <Link href="/event" className="text-decoration-none text-dark">
+    <Link href={"/event"} className="text-decoration-none text-dark">
       <div
         className={`border border-black rounded mb-3 ${small ? "p-2" : "p-3"}`}
         style={{ width: small ? 130 : 220, cursor: "pointer" }}
@@ -19,8 +33,9 @@ export function EventCard({ small }: { small?: boolean }) {
           <span className="text-secondary position-relative" style={{ zIndex: 1 }}>Image</span>
         </div>
         <div>
-          <div className="fw-semibold">Event Title (Online)</div>
-          <div className="small">01/01/26</div>
+          <div className="fw-semibold">{title}</div>
+          <div className="small">{startTime}</div>
+          <div className="small">{endTime}</div>
         </div>
       </div>
     </Link>

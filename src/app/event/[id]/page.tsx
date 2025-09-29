@@ -1,13 +1,51 @@
+import { Armata } from "next/font/google";
 import React from "react";
 
-export default function EventPage() {
+// Dealing with next believing I gotta await params
+type Params = { params: Promise<{id: string}> }
+
+export async function generateStaticParams() {
+  const response = await fetch(`http://localhost:8080/api/events`);
+  const data = await response.json();
+
+  return data.map((event: any) => ({
+    id: event.id.toString(),
+  }))
+}
+
+// Combs through the events to match the ID
+async function getEvent(id: string) {
+  const response = await fetch(`http://localhost:8080/api/events`);
+  const data = await response.json();
+
+  return data.find((event: any) => event.id === id);
+}
+
+
+export default async function EventPage(props: Params) {
+  const params = await props.params;
+  const event = await getEvent(params.id)
+
+  // Quick condition incase event ID doesn't exist
+  if(!event){
+    return (
+      <main className="d-flex align-items-center justify-content-center">
+        <div className="text-center">
+          <h2>Event unavailable</h2>
+        </div>
+      </main>
+    )
+  }
+
+  // Each call of an event property is going to check if data exists there first
   return (
     <main className="min-vh-100 bg-white font-sans d-flex flex-column align-items-center">
       <div className="w-100" style={{ maxWidth: 1100 }}>
 
         <div className="px-4 pt-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
-            <div className="fs-4 fw-semibold">Event Title <span className="fs-6 fw-normal ms-2">Organizer</span></div>
+            {/*Event title and organiser*/}
+            <div className="fs-4 fw-semibold">{event?.title} <span className="fs-6 fw-normal ms-2">{event?.organizer?.displayName}</span></div>
           </div>
           <div className="row g-4">
             {/* Left: Image and Interactions */}
@@ -33,12 +71,13 @@ export default function EventPage() {
             <div className="col-md-5">
               <div className="mb-3">
                 <div className="fw-semibold">Date / Time</div>
-                <div className="mb-2"></div>
+                <div className="mb-2">Starts: {event?.startTime}</div>
+                <div className="mb-2">Ends: {event?.endTime}</div>
                 <div className="fw-semibold">Location</div>
-                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
-                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}></div>
+                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.location?.address}</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.location?.type}</div>
                 <div className="fw-semibold">Description</div>
-                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
+                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.description}</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="border-bottom border-black mb-2" style={{ width: "60%" }}></div>

@@ -29,6 +29,7 @@ export default async function Home() {
             {featured.map((event: any) => (
               <EventCard
                 key={event.id}
+                id={event.id}
                 title={event.title}
                 startTime={event.startTime}
                 endTime={event.endTime}
@@ -40,6 +41,7 @@ export default async function Home() {
               <EventCard
                 small
                 key={event.id}
+                id={event.id}
                 title={event.title}
                 startTime={event.startTime}
                 endTime={event.endTime}

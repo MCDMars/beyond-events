@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 type EventCardProps = {
+  id: string;
   title: string;
   startTime: string;
   endTime: string;
@@ -13,10 +14,11 @@ export function EventCard(
     startTime,
     endTime,
     small,
+    id,
   }: EventCardProps
 ) {
   return (
-    <Link href={"/event"} className="text-decoration-none text-dark">
+    <Link href={`/event/${id}`} className="text-decoration-none text-dark">
       <div
         className={`border border-black rounded mb-3 ${small ? "p-2" : "p-3"}`}
         style={{ width: small ? 130 : 220, cursor: "pointer" }}

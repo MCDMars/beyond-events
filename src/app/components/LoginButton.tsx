@@ -9,17 +9,18 @@ export default function LoginButton() {
   const [inTeams, setInTeams] = useState(false);
 
   useEffect(() => {
-    // Detect Teams host
-    microsoftTeams.app.initialize().then(() => setInTeams(true)).catch(() => {});
+    microsoftTeams.app
+      .initialize()
+      .then(() => setInTeams(true))
+      .catch(() => {});
   }, []);
 
   const login = async () => {
     if (inTeams) {
-      // Teams SSO: get a token from Teams and use it directly against your API.
+      // Teams SSO: get a token from Teams and use it directly the backend API.
       try {
         const token = await microsoftTeams.authentication.getAuthToken();
-        // call your API with this token
-        await fetch("/api/me", {
+        await fetch("http://localhost:8080/teams/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (e) {
@@ -28,12 +29,14 @@ export default function LoginButton() {
       return;
     }
 
-    // Web: use MSAL login + acquire token for your API scope
     if (accounts.length === 0) {
       await instance.loginPopup({ scopes: apiScopes });
     }
-    const result = await instance.acquireTokenSilent({ scopes: apiScopes, account: instance.getAllAccounts()[0] });
-    await fetch("/api/me", {
+    const result = await instance.acquireTokenSilent({
+      scopes: apiScopes,
+      account: instance.getAllAccounts()[0],
+    });
+    await fetch("http://localhost:8080/teams/me", {
       headers: { Authorization: `Bearer ${result.accessToken}` },
     });
   };

@@ -37,6 +37,28 @@ export default async function EventPage(props: Params) {
     )
   }
 
+  // Datetime conversion
+  const start = new Date(event?.startTime);
+  const end = new Date(event?.endTime);
+
+  // Local formatting
+  const locale = typeof window !== "undefined" ? navigator.language : "en-IE";
+
+  const formattedStart = new Intl.DateTimeFormat(locale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: undefined,
+  }).format(start);
+
+  const formattedEnd = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: undefined,
+  }).format(end);
+
   // Each call of an event property is going to check if data exists there first
   return (
     <main className="min-vh-100 bg-white font-sans d-flex flex-column align-items-center">
@@ -71,8 +93,8 @@ export default async function EventPage(props: Params) {
             <div className="col-md-5">
               <div className="mb-3">
                 <div className="fw-semibold">Date / Time</div>
-                <div className="mb-2">Starts: {event?.startTime}</div>
-                <div className="mb-2">Ends: {event?.endTime}</div>
+                <div className="mb-2">Starts: {formattedStart}</div>
+                <div className="mb-2">Ends: {formattedEnd}</div>
                 <div className="fw-semibold">Location</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.location?.address}</div>
                 <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.location?.type}</div>

@@ -4,7 +4,9 @@ import React, { useEffect, useState } from "react";
 
 export default function CreateEventPage() {
 
+  // Fetching locations and categories for dropdowns
   const [locations, setLocations] = useState<{ id: string; name: string }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
     useEffect(() => {
     const fetchLocations = async () => {
@@ -19,6 +21,20 @@ export default function CreateEventPage() {
     fetchLocations();
   }, []); 
 
+    useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('http://localhost:8080/api/categories');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+      }
+    };
+    fetchCategories();
+  }, []); 
+
+  // Setting data to be sent back
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -30,8 +46,10 @@ export default function CreateEventPage() {
     bracket: false,
     voting: false,
     openSpace: false,
+    category_Id: "",
   });
 
+  // Trycatch to post, used by the submit button
   async function handleSubmit(e: any) {
     e.preventDefault();
     console.log("Starting submit")
@@ -41,6 +59,7 @@ export default function CreateEventPage() {
     }
 
     try {
+      // Gotta do this cause it expects an iso 8601 standard datetime
       console.log("Converting datetime");
       const start = new Date(formData.startTime);
       const end = new Date(formData.endTime);
@@ -58,18 +77,19 @@ export default function CreateEventPage() {
           startTime: isoStart,
           endTime: isoEnd,
           location_Id: formData.location_Id,
+          category_Id: formData.category_Id,
           url: formData.url,
           recurring: formData.recurring,
           bracket: formData.bracket,
           voting: formData.voting,
           openSpace: formData.openSpace,
           organizer_Id: "6c7cad90-c167-4a82-a138-4fe2d56a2f5d",
-          category_Id: 1
         }),
       });
       console.log("Response", response)
       if (!response.ok) throw new Error("RESPONSE ERROR");
 
+      // Establish success and reset the form
       alert("Event created");
       setFormData({
         title: "",
@@ -77,6 +97,7 @@ export default function CreateEventPage() {
         startTime: "",
         endTime: "",
         location_Id: "",
+        category_Id: "",
         url: "",
         recurring: false,
         bracket: false,
@@ -183,13 +204,39 @@ export default function CreateEventPage() {
                 className="form-select w-auto"
                 required
               >
-    <option value="">Select an option</option>
-    {locations.map(loc => (
-      <option key={loc.id} value={loc.id}>
-        {loc.name}
-      </option>
-    ))}
-  </select>
+                <option value="">Select an option</option>
+                {locations.map(loc => (
+                  <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Category */}
+            <div className="row d-flex align-items-center mb-3 gx-5">
+              <label htmlFor="category_Id" className="col-sm-2">
+                Category
+              </label>
+              <select
+                id="category_Id"
+                name="category_Id"
+                value={formData.category_Id || ""} // controlled value
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setFormData(prev => ({
+                    ...prev,
+                    category_Id: e.target.value, // Long
+                  }))
+                }
+                className="form-select w-auto"
+              >
+                <option value="">Select an option</option>
+                {categories.map(loc => (
+                  <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+                ))}
+              </select>
             </div>
 
             {/* URL */}

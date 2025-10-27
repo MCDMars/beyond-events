@@ -80,7 +80,8 @@ export default async function EventPage(props: Params) {
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.description}</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
-                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}></div>
+                <div className="fw-semibold">Category</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}>{event?.category?.name}</div>
               </div>
               <div className="fw-semibold mb-2">Participants (00)</div>
               <div className="d-flex gap-2 mb-3">

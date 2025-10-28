@@ -1,7 +1,7 @@
 import { Armata } from "next/font/google";
 import React from "react";
 
-// Dealing with next believing I gotta await params
+// Dealing with await params
 type Params = { params: Promise<{id: string}> }
 
 export async function generateStaticParams() {
@@ -74,10 +74,7 @@ export default async function EventPage(props: Params) {
             <div className="col-md-7">
               {/* Image Placeholder */}
               <div className="border border-black mb-3" style={{ width: "100%", aspectRatio: "4/3", position: "relative", background: "#f8f9fa" }}>
-                <svg width="100%" height="100%" viewBox="0 0 400 300" style={{ position: "absolute", left: 0, top: 0 }}>
-                  <line x1="0" y1="0" x2="400" y2="300" stroke="#bbb" strokeWidth="2" />
-                  <line x1="400" y1="0" x2="0" y2="300" stroke="#bbb" strokeWidth="2" />
-                </svg>
+                <img src={event?.iconImageUrl} width="100%" height="100%"/>
               </div>
               {/* Event Interaction */}
               <div className="fw-semibold mb-2">Event Interaction</div>
@@ -111,7 +108,12 @@ export default async function EventPage(props: Params) {
                 <div className="rounded-circle border border-black" style={{ width: 32, height: 32 }}></div>
                 <div className="rounded-circle border border-black" style={{ width: 32, height: 32 }}></div>
               </div>
-              <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
+              <div className="d-flex gap-2 mb-3">
+                <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
+              </div>
+              <div className="d-flex gap-2 mb-3">
+                <button className="btn btn-outline-dark px-5 py-2 fs-5" hidden={(event.categoryEntity.id != 5)}>Create Openspace event</button>
+              </div>
             </div>
           </div>
         </div>

@@ -4,6 +4,21 @@ import React, { useEffect, useState } from "react";
 
 export default function CreateEventPage() {
 
+  // Set blank defaults
+  const defaultFormData = {
+    title: "",
+    description: "",
+    startTime: "",
+    endTime: "",
+    location_Id: "",
+    url: "",
+    features: [] as string[],
+    category_Id: "",
+  };
+
+  // Setting up default data with UseState
+  const [formData, setFormData] = useState(defaultFormData);
+
   // Fetching locations and categories for dropdowns
   const [locations, setLocations] = useState<{ id: string; name: string }[]>([]);
   const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
@@ -38,27 +53,12 @@ export default function CreateEventPage() {
     function handleFeatureToggle(feature: string, checked: boolean) {
     setFormData(prev => {
       const updatedFeatures = checked
-        ? [...prev.organization_features, feature] // add if checked
-        : prev.organization_features.filter(f => f !== feature); // remove if unchecked
+        ? [...prev.features, feature] // add if checked
+        : prev.features.filter(f => f !== feature); // remove if unchecked
 
-      return { ...prev, organization_features: updatedFeatures };
+      return { ...prev, features: updatedFeatures };
     });
   }
-
-  // Blank defaults
-  const defaultFormData = {
-    title: "",
-    description: "",
-    startTime: "",
-    endTime: "",
-    location_Id: "",
-    url: "",
-    organization_features: [] as string[],
-    category_Id: "",
-  };
-
-  // Setting up default data with UseState
-  const [formData, setFormData] = useState(defaultFormData);
 
   // Trycatch to post, used by the submit button
   async function handleSubmit(e: any) {
@@ -91,7 +91,7 @@ export default function CreateEventPage() {
           location_Id: formData.location_Id,
           category_Id: formData.category_Id,
           url: formData.url,
-          organization_features: formData.organization_features,
+          features: formData.features,
           organizer_Id: "6c7cad90-c167-4a82-a138-4fe2d56a2f5d",
         }),
       });
@@ -258,7 +258,7 @@ export default function CreateEventPage() {
             
             <div className="fs-6 fw-semibold mb-3">Additional options</div>
 
-            {["brackets", "voting", "reccuring"].map(feature => (
+            {["brackets", "timetable", "comments", "voting"].map(feature => (
               <div key={feature} className="row d-flex align-items-center mb-3 gx-5">
                 <label htmlFor={feature} className="col-sm-2 text-capitalize">
                   {feature.replace(/([A-Z])/g, " $1")}
@@ -266,7 +266,7 @@ export default function CreateEventPage() {
                 <input
                   id={feature}
                   type="checkbox"
-                  checked={formData.organization_features.includes(feature)}
+                  checked={formData.features.includes(feature)}
                   onChange={e => handleFeatureToggle(feature, e.target.checked)}
                   className="form-check-input w-auto"
                 />

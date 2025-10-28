@@ -34,6 +34,7 @@ export default async function Home() {
                     title={event.title}
                     startTime={event.startTime}
                     endTime={event.endTime}
+                    iconImageUrl={event.iconImageUrl}
                   />
                 </div>
               ))}
@@ -50,6 +51,7 @@ export default async function Home() {
                     title={event.title}
                     startTime={event.startTime}
                     endTime={event.endTime}
+                    iconImageUrl={event.iconImageUrl}
                   />
                 </div>
               ))}

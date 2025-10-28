@@ -1,5 +1,5 @@
 import Link from "next/link";
-import LoginButton from "./LoginButton";
+import LoginOrAvatar from "./LoginOrAvatarButton";
 
 export function Navbar() {
   return (
@@ -17,7 +17,7 @@ export function Navbar() {
         <a href="#" className="text-decoration-none link-dark">
           Profile
         </a>
-        <LoginButton></LoginButton>
+        <LoginOrAvatar></LoginOrAvatar>
       </div>
     </nav>
   );

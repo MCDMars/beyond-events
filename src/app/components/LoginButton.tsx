@@ -4,6 +4,7 @@ import * as microsoftTeams from "@microsoft/teams-js";
 import { apiScopes } from "@/lib/auth/msalConfig";
 import { useEffect, useState } from "react";
 
+//Deprecated login button component, keeping temporarily for reference
 export default function LoginButton() {
   const { instance, accounts } = useMsal();
   const [inTeams, setInTeams] = useState(false);

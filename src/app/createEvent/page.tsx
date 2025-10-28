@@ -34,20 +34,31 @@ export default function CreateEventPage() {
     fetchCategories();
   }, []); 
 
-  // Setting data to be sent back
-  const [formData, setFormData] = useState({
+    // Setting checkbox toggle
+    function handleFeatureToggle(feature: string, checked: boolean) {
+    setFormData(prev => {
+      const updatedFeatures = checked
+        ? [...prev.organization_features, feature] // add if checked
+        : prev.organization_features.filter(f => f !== feature); // remove if unchecked
+
+      return { ...prev, organization_features: updatedFeatures };
+    });
+  }
+
+  // Blank defaults
+  const defaultFormData = {
     title: "",
     description: "",
     startTime: "",
     endTime: "",
     location_Id: "",
     url: "",
-    recurring: false,
-    bracket: false,
-    voting: false,
-    openSpace: false,
+    organization_features: [] as string[],
     category_Id: "",
-  });
+  };
+
+  // Setting up default data with UseState
+  const [formData, setFormData] = useState(defaultFormData);
 
   // Trycatch to post, used by the submit button
   async function handleSubmit(e: any) {
@@ -67,6 +78,7 @@ export default function CreateEventPage() {
       const isoStart = start.toISOString();
       const isoEnd = end.toISOString();
 
+      // For every change made, this is where I pray
       console.log("Beginning post")
       const response = await fetch("http://127.0.0.1:8080/api/events/add", {
         method: "POST",
@@ -79,10 +91,7 @@ export default function CreateEventPage() {
           location_Id: formData.location_Id,
           category_Id: formData.category_Id,
           url: formData.url,
-          recurring: formData.recurring,
-          bracket: formData.bracket,
-          voting: formData.voting,
-          openSpace: formData.openSpace,
+          organization_features: formData.organization_features,
           organizer_Id: "6c7cad90-c167-4a82-a138-4fe2d56a2f5d",
         }),
       });
@@ -91,19 +100,7 @@ export default function CreateEventPage() {
 
       // Establish success and reset the form
       alert("Event created");
-      setFormData({
-        title: "",
-        description: "",
-        startTime: "",
-        endTime: "",
-        location_Id: "",
-        category_Id: "",
-        url: "",
-        recurring: false,
-        bracket: false,
-        voting: false,
-        openSpace: false,
-      });
+      setFormData(defaultFormData);
     } catch (err) {
       console.error(err);
       alert("GENERIC ERROR");
@@ -257,87 +254,25 @@ export default function CreateEventPage() {
               />
             </div>
 
-            {/* Recurring */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="recurring" className="col-sm-2">
-                Recurring event
-              </label>
-              <input
-                id="recurring"
-                type="checkbox"
-                name="recurring"
-                checked={formData.recurring}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    recurring: e.target.checked,
-                  }))
-                }
-                className="form-check-input w-auto"
-              />
-            </div>
-
+            {/* Features */}
+            
             <div className="fs-6 fw-semibold mb-3">Additional options</div>
 
-            {/* Bracket */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="bracket" className="col-sm-2">
-                Requires bracket
-              </label>
-              <input
-                id="bracket"
-                type="checkbox"
-                name="bracket"
-                checked={formData.bracket}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    bracket: e.target.checked,
-                  }))
-                }
-                className="form-check-input w-auto"
-              />
-            </div>
+            {["brackets", "voting", "reccuring"].map(feature => (
+              <div key={feature} className="row d-flex align-items-center mb-3 gx-5">
+                <label htmlFor={feature} className="col-sm-2 text-capitalize">
+                  {feature.replace(/([A-Z])/g, " $1")}
+                </label>
+                <input
+                  id={feature}
+                  type="checkbox"
+                  checked={formData.organization_features.includes(feature)}
+                  onChange={e => handleFeatureToggle(feature, e.target.checked)}
+                  className="form-check-input w-auto"
+                />
+              </div>
+            ))}
 
-            {/* Voting */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="voting" className="col-sm-2">
-                Voting
-              </label>
-              <input
-                id="voting"
-                type="checkbox"
-                name="voting"
-                checked={formData.voting}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    voting: e.target.checked,
-                  }))
-                }
-                className="form-check-input w-auto"
-              />
-            </div>
-
-            {/* Open Space */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="openSpace" className="col-sm-2">
-                Open space
-              </label>
-              <input
-                id="openSpace"
-                type="checkbox"
-                name="openSpace"
-                checked={formData.openSpace}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    openSpace: e.target.checked,
-                  }))
-                }
-                className="form-check-input w-auto"
-              />
-            </div>
 
             <button
               className="btn btn-outline-dark px-5 py-2 fs-5"

@@ -96,14 +96,14 @@ export default async function EventPage(props: Params) {
                 <div className="mb-2">Starts: {formattedStart}</div>
                 <div className="mb-2">Ends: {formattedEnd}</div>
                 <div className="fw-semibold">Location</div>
-                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.location?.address}</div>
-                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.location?.type}</div>
+                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.locationEntity?.address}</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.locationEntity?.type}</div>
                 <div className="fw-semibold">Description</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.description}</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="fw-semibold">Category</div>
-                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}>{event?.category?.name}</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}>{event?.categoryEntity?.name}</div>
               </div>
               <div className="fw-semibold mb-2">Participants (00)</div>
               <div className="d-flex gap-2 mb-3">

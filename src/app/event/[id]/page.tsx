@@ -1,4 +1,3 @@
-import { Armata } from "next/font/google";
 import React from "react";
 
 // Dealing with await params
@@ -37,6 +36,18 @@ export default async function EventPage(props: Params) {
     )
   }
 
+  // True in this case means feature not present, false means is present
+  // Written as such for the hidden tag
+  function hasFeature(feat: string) {
+
+    if (!event.organizationFeatures || event.organizationFeatures.length === 0) {
+      return true; // hide it
+    }
+
+    const missing = !event.organizationFeatures.includes(feat);
+    return missing;
+  }
+
   // Datetime conversion
   const start = new Date(event?.startTime);
   const end = new Date(event?.endTime);
@@ -63,7 +74,6 @@ export default async function EventPage(props: Params) {
   return (
     <main className="min-vh-100 bg-white font-sans d-flex flex-column align-items-center">
       <div className="w-100" style={{ maxWidth: 1100 }}>
-
         <div className="px-4 pt-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
             {/*Event title and organiser*/}
@@ -78,13 +88,19 @@ export default async function EventPage(props: Params) {
               </div>
               {/* Event Interaction */}
               <div className="fw-semibold mb-2">Event Interaction</div>
-              <div className="mb-3">
-                <a href="#" className="me-3 text-decoration-underline">Voting</a>
-                <a href="#" className="text-decoration-underline">Brackets</a>
+              <div className="mb-3 row">
+                <div className="col-2" hidden={hasFeature("voting")}>
+                  <a href="#" className="me-3 text-decoration-underline">Voting</a>
+                </div>
+                <div className="col-2" hidden={hasFeature("brackets")}>
+                  <a href="#" className="text-decoration-underline">Brackets</a>
+                </div>
               </div>
               {/* Comments */}
-              <div className="fw-semibold mb-2">Comments</div>
-              <div className="border-bottom border-black" style={{ height: 32, width: "100%" }}></div>
+              <div hidden={hasFeature("comments")}>
+                <div className="fw-semibold mb-2">Comments</div>
+                <div className="border-bottom border-black" style={{ height: 32, width: "100%" }}></div>
+              </div>
             </div>
             {/* Right: Details and Join */}
             <div className="col-md-5">
@@ -111,8 +127,8 @@ export default async function EventPage(props: Params) {
               <div className="d-flex gap-2 mb-3">
                 <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
               </div>
-              <div className="d-flex gap-2 mb-3">
-                <button className="btn btn-outline-dark px-5 py-2 fs-5" hidden={(event.categoryEntity.id != 5)}>Create Openspace event</button>
+              <div className="d-flex gap-2 mb-3" hidden={(event.categoryEntity.id != 5)}>
+                <a href={`/createSubEvent/${event.id}`}><button className="btn btn-outline-dark px-5 py-2 fs-5">Create Openspace event</button></a>
               </div>
             </div>
           </div>

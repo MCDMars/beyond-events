@@ -1,16 +1,7 @@
 import React from "react";
 
-// Dealing with await params
+// Dealing with await params for future Next versions
 type Params = { params: Promise<{id: string}> }
-
-export async function generateStaticParams() {
-  const response = await fetch(`http://localhost:8080/api/events`);
-  const data = await response.json();
-
-  return data.map((event: any) => ({
-    id: event.id.toString(),
-  }))
-}
 
 // Combs through the events to match the ID
 async function getEvent(id: string) {
@@ -40,11 +31,11 @@ export default async function EventPage(props: Params) {
   // Written as such for the hidden tag
   function hasFeature(feat: string) {
 
-    if (!event.organizationFeatures || event.organizationFeatures.length === 0) {
+    if (event.organizationFeatures === null || event.organizationFeatures.length === 0) {
       return true; // hide it
     }
 
-    const missing = !event.organizationFeatures.includes(feat);
+    const missing = !event.organizationFeatures.includes(feat.toUpperCase());
     return missing;
   }
 
@@ -90,10 +81,10 @@ export default async function EventPage(props: Params) {
               <div className="fw-semibold mb-2">Event Interaction</div>
               <div className="mb-3 row">
                 <div className="col-2" hidden={hasFeature("voting")}>
-                  <a href="#" className="me-3 text-decoration-underline">Voting</a>
+                  <div ><a href="#" className="me-3 text-decoration-underline">Voting</a></div>
                 </div>
                 <div className="col-2" hidden={hasFeature("brackets")}>
-                  <a href="#" className="text-decoration-underline">Brackets</a>
+                  <div><a href="#" className="text-decoration-underline">Brackets</a></div>
                 </div>
               </div>
               {/* Comments */}
@@ -127,8 +118,9 @@ export default async function EventPage(props: Params) {
               <div className="d-flex gap-2 mb-3">
                 <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
               </div>
-              <div className="d-flex gap-2 mb-3" hidden={(event.categoryEntity.id != 5)}>
-                <a href={`/createSubEvent/${event.id}`}><button className="btn btn-outline-dark px-5 py-2 fs-5">Create Openspace event</button></a>
+              {/* It despised not having the hidden being inline on one line with no classname for some reason */}
+              <div className="d-flex gap-2 mb-3">
+                <div hidden={event.categoryEntity.id != 5}><a href={`/createSubEvent/${event.id}`}><button className="btn btn-outline-dark px-5 py-2 fs-5">Create Openspace event</button></a></div>
               </div>
             </div>
           </div>

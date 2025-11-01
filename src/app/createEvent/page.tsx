@@ -56,10 +56,6 @@ export default function CreateEventPage() {
         ? [...prev.features, feature] // add if checked
         : prev.features.filter(f => f !== feature); // remove if unchecked
 
-    console.log("Toggled:", feature, checked);
-    console.log("Prev:", prev.features);
-    console.log("Next:", updatedFeatures);
-
       return { ...prev, features: updatedFeatures };
     });
   }

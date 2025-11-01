@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-export default function CreateEventPage() {
+function CreateSubEventPage() {
 
   // Set blank defaults
   const defaultFormData = {
@@ -55,10 +55,6 @@ export default function CreateEventPage() {
       const updatedFeatures = checked
         ? [...prev.features, feature] // add if checked
         : prev.features.filter(f => f !== feature); // remove if unchecked
-
-    console.log("Toggled:", feature, checked);
-    console.log("Prev:", prev.features);
-    console.log("Next:", updatedFeatures);
 
       return { ...prev, features: updatedFeatures };
     });
@@ -156,128 +152,6 @@ export default function CreateEventPage() {
               />
             </div>
 
-            {/* Start/End Time */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="startTime" className="col-sm-2">
-                Start date
-              </label>
-              <input
-                id="startTime"
-                type="datetime-local"
-                name="startTime"
-                value={formData.startTime}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({ ...prev, startTime: e.target.value }))
-                }
-                className="form-control w-auto"
-              />
-
-              <label htmlFor="endTime" className="col-sm-2">
-                End date
-              </label>
-              <input
-                id="endTime"
-                type="datetime-local"
-                name="endTime"
-                value={formData.endTime}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({ ...prev, endTime: e.target.value }))
-                }
-                className="form-control w-auto"
-              />
-            </div>
-
-            {/* Location */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="location_Id" className="col-sm-2">
-                Location
-              </label>
-              <select
-                id="location_Id"
-                name="location_Id"
-                value={formData.location_Id || ""} // controlled value
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    location_Id: e.target.value, // UUID string
-                  }))
-                }
-                className="form-select w-auto"
-                required
-              >
-                <option value="">Select an option</option>
-                {locations.map(loc => (
-                  <option key={loc.id} value={loc.id}>
-                  {loc.name}
-                </option>
-                ))}
-              </select>
-            </div>
-            
-            {/* Category */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="category_Id" className="col-sm-2">
-                Category
-              </label>
-              <select
-                id="category_Id"
-                name="category_Id"
-                value={formData.category_Id || ""} // controlled value
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setFormData(prev => ({
-                    ...prev,
-                    category_Id: e.target.value, // Long
-                  }))
-                }
-                className="form-select w-auto"
-              >
-                <option value="">Select an option</option>
-                {categories.map(loc => (
-                  <option key={loc.id} value={loc.id}>
-                  {loc.name}
-                </option>
-                ))}
-              </select>
-            </div>
-
-            {/* URL */}
-            <div className="row d-flex align-items-center mb-3 gx-5">
-              <label htmlFor="url" className="col-sm-2">
-                Teams link
-              </label>
-              <input
-                id="url"
-                type="url"
-                name="url"
-                value={formData.url}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setFormData(prev => ({ ...prev, url: e.target.value }))
-                }
-                placeholder="https://teams.microsoft.com/"
-                className="form-control w-auto"
-              />
-            </div>
-
-            {/* Features */}
-            
-            <div className="fs-6 fw-semibold mb-3">Additional options</div>
-
-            {["brackets", "timetable", "comments", "voting"].map(feature => (
-              <div key={feature} className="row d-flex align-items-center mb-3 gx-5">
-                <label htmlFor={feature} className="col-sm-2 text-capitalize">
-                  {feature.replace(/([A-Z])/g, " $1")}
-                </label>
-                <input
-                  id={feature}
-                  type="checkbox"
-                  checked={formData.features.includes(feature)}
-                  onChange={e => handleFeatureToggle(feature, e.target.checked)}
-                  className="form-check-input w-auto"
-                />
-              </div>
-            ))}
-
-
             <button
               className="btn btn-outline-dark px-5 py-2 fs-5"
               onClick={handleSubmit}
@@ -290,3 +164,5 @@ export default function CreateEventPage() {
     </main>
   );
 }
+// This page just straight breaks if I don't have this here
+export default CreateSubEventPage;

@@ -1,7 +1,6 @@
-import { Armata } from "next/font/google";
 import React from "react";
 
-// Dealing with next believing I gotta await params
+// Dealing with await params
 type Params = { params: Promise<{id: string}> }
 
 export async function generateStaticParams() {
@@ -37,11 +36,44 @@ export default async function EventPage(props: Params) {
     )
   }
 
+  // True in this case means feature not present, false means is present
+  // Written as such for the hidden tag
+  function hasFeature(feat: string) {
+
+    if (!event.organizationFeatures || event.organizationFeatures.length === 0) {
+      return true; // hide it
+    }
+
+    const missing = !event.organizationFeatures.includes(feat);
+    return missing;
+  }
+
+  // Datetime conversion
+  const start = new Date(event?.startTime);
+  const end = new Date(event?.endTime);
+
+  // Local formatting
+  const locale = typeof window !== "undefined" ? navigator.language : "en-IE";
+
+  const formattedStart = new Intl.DateTimeFormat(locale, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: undefined,
+  }).format(start);
+
+  const formattedEnd = new Intl.DateTimeFormat(locale, {
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: undefined,
+  }).format(end);
+
   // Each call of an event property is going to check if data exists there first
   return (
     <main className="min-vh-100 bg-white font-sans d-flex flex-column align-items-center">
       <div className="w-100" style={{ maxWidth: 1100 }}>
-
         <div className="px-4 pt-4">
           <div className="d-flex justify-content-between align-items-center mb-2">
             {/*Event title and organiser*/}
@@ -52,35 +84,39 @@ export default async function EventPage(props: Params) {
             <div className="col-md-7">
               {/* Image Placeholder */}
               <div className="border border-black mb-3" style={{ width: "100%", aspectRatio: "4/3", position: "relative", background: "#f8f9fa" }}>
-                <svg width="100%" height="100%" viewBox="0 0 400 300" style={{ position: "absolute", left: 0, top: 0 }}>
-                  <line x1="0" y1="0" x2="400" y2="300" stroke="#bbb" strokeWidth="2" />
-                  <line x1="400" y1="0" x2="0" y2="300" stroke="#bbb" strokeWidth="2" />
-                </svg>
+                <img src={event?.iconImageUrl} width="100%" height="100%"/>
               </div>
               {/* Event Interaction */}
               <div className="fw-semibold mb-2">Event Interaction</div>
-              <div className="mb-3">
-                <a href="#" className="me-3 text-decoration-underline">Voting</a>
-                <a href="#" className="text-decoration-underline">Brackets</a>
+              <div className="mb-3 row">
+                <div className="col-2" hidden={hasFeature("voting")}>
+                  <a href="#" className="me-3 text-decoration-underline">Voting</a>
+                </div>
+                <div className="col-2" hidden={hasFeature("brackets")}>
+                  <a href="#" className="text-decoration-underline">Brackets</a>
+                </div>
               </div>
               {/* Comments */}
-              <div className="fw-semibold mb-2">Comments</div>
-              <div className="border-bottom border-black" style={{ height: 32, width: "100%" }}></div>
+              <div hidden={hasFeature("comments")}>
+                <div className="fw-semibold mb-2">Comments</div>
+                <div className="border-bottom border-black" style={{ height: 32, width: "100%" }}></div>
+              </div>
             </div>
             {/* Right: Details and Join */}
             <div className="col-md-5">
               <div className="mb-3">
                 <div className="fw-semibold">Date / Time</div>
-                <div className="mb-2">Starts: {event?.startTime}</div>
-                <div className="mb-2">Ends: {event?.endTime}</div>
+                <div className="mb-2">Starts: {formattedStart}</div>
+                <div className="mb-2">Ends: {formattedEnd}</div>
                 <div className="fw-semibold">Location</div>
-                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.location?.address}</div>
-                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.location?.type}</div>
+                <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.locationEntity?.address}</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "100%" }}>{event?.locationEntity?.type}</div>
                 <div className="fw-semibold">Description</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}>{event?.description}</div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
                 <div className="border-bottom border-black mb-1" style={{ width: "100%" }}></div>
-                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}></div>
+                <div className="fw-semibold">Category</div>
+                <div className="border-bottom border-black mb-2" style={{ width: "60%" }}>{event?.categoryEntity?.name}</div>
               </div>
               <div className="fw-semibold mb-2">Participants (00)</div>
               <div className="d-flex gap-2 mb-3">
@@ -88,7 +124,12 @@ export default async function EventPage(props: Params) {
                 <div className="rounded-circle border border-black" style={{ width: 32, height: 32 }}></div>
                 <div className="rounded-circle border border-black" style={{ width: 32, height: 32 }}></div>
               </div>
-              <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
+              <div className="d-flex gap-2 mb-3">
+                <button className="btn btn-outline-dark px-5 py-2 fs-5">Join</button>
+              </div>
+              <div className="d-flex gap-2 mb-3" hidden={(event.categoryEntity.id != 5)}>
+                <a href={`/createSubEvent/${event.id}`}><button className="btn btn-outline-dark px-5 py-2 fs-5">Create Openspace event</button></a>
+              </div>
             </div>
           </div>
         </div>

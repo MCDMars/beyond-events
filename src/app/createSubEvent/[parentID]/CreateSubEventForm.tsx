@@ -19,11 +19,22 @@ function CreateSubEventPage({parentEvent}: { parentEvent: any}){
     location_Id: parentEvent.locationEntity.id,
     category_Id: "",
     parent_uuid: parentEvent.id,
+    locationFeatures: [] as string [],
   };
-  console.log(defaultFormData)
 
   // Setting up default data with UseState
   const [formData, setFormData] = useState(defaultFormData);
+
+  // Setting checkbox toggle
+    function handleFeatureToggle(feature: string, checked: boolean) {
+    setFormData(prev => {
+      const updatedFeatures = checked
+        ? [...prev.locationFeatures, feature] // add if checked
+        : prev.locationFeatures.filter(f => f !== feature); // remove if unchecked
+
+      return { ...prev, locationFeatures: updatedFeatures };
+    });
+  }
 
   // Trycatch to post, used by the submit button
   async function handleSubmit(e: any) {
@@ -58,6 +69,7 @@ function CreateSubEventPage({parentEvent}: { parentEvent: any}){
           category_Id: 1,
           organizer_Id: "6c7cad90-c167-4a82-a138-4fe2d56a2f5d",
           parent_uuid: parentEvent.id,
+          locationFeatures: formData.locationFeatures,
         }),
       });
       console.log("Response", response)
@@ -116,6 +128,24 @@ function CreateSubEventPage({parentEvent}: { parentEvent: any}){
                 style={{ minWidth: 300, minHeight: 90, resize: "none" }}
               />
             </div>
+
+            <div className="fs-6 fw-semibold mb-3">Location options</div>
+            <div className="fs-6 mb-3">* Please note, while we will attempt to accomodate everyone, we cannot guarantee all wants can be met</div>
+
+            {["whiteboard", "tv-screen", "kitchen"].map(feature => (
+              <div key={feature} className="row d-flex align-items-center mb-3 gx-5">
+                <label htmlFor={feature} className="col-sm-2 text-capitalize">
+                  {feature.replace(/([A-Z])/g, " $1")}
+                </label>
+                <input
+                  id={feature}
+                  type="checkbox"
+                  checked={formData.locationFeatures.includes(feature)}
+                  onChange={e => handleFeatureToggle(feature, e.target.checked)}
+                  className="form-check-input w-auto"
+                />
+              </div>
+            ))}
 
             <button
               className="btn btn-outline-dark px-5 py-2 fs-5"

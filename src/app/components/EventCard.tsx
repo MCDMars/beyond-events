@@ -59,7 +59,7 @@ export function EventCard(
             position: "relative",
           }}
         >
-          {/* Image Placeholder with X */}
+          {/* Image */}
             <img src={iconImageUrl} width="100%" height="100%"/>
         </div>
         <div>

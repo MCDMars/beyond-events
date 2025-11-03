@@ -12,7 +12,7 @@ export default function CreateEventPage() {
     endTime: "",
     location_Id: "",
     url: "",
-    features: [] as string[],
+    organizationFeatures: [] as string[],
     category_Id: "",
   };
 
@@ -53,10 +53,10 @@ export default function CreateEventPage() {
     function handleFeatureToggle(feature: string, checked: boolean) {
     setFormData(prev => {
       const updatedFeatures = checked
-        ? [...prev.features, feature] // add if checked
-        : prev.features.filter(f => f !== feature); // remove if unchecked
+        ? [...prev.organizationFeatures, feature] // add if checked
+        : prev.organizationFeatures.filter(f => f !== feature); // remove if unchecked
 
-      return { ...prev, features: updatedFeatures };
+      return { ...prev, organizationFeatures: updatedFeatures };
     });
   }
 
@@ -91,7 +91,7 @@ export default function CreateEventPage() {
           location_Id: formData.location_Id,
           category_Id: formData.category_Id,
           url: formData.url,
-          features: formData.features,
+          organizationFeatures: formData.organizationFeatures,
           organizer_Id: "6c7cad90-c167-4a82-a138-4fe2d56a2f5d",
         }),
       });
@@ -266,7 +266,7 @@ export default function CreateEventPage() {
                 <input
                   id={feature}
                   type="checkbox"
-                  checked={formData.features.includes(feature)}
+                  checked={formData.organizationFeatures.includes(feature)}
                   onChange={e => handleFeatureToggle(feature, e.target.checked)}
                   className="form-check-input w-auto"
                 />

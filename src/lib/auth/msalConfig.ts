@@ -10,5 +10,6 @@ export const msalConfig: Configuration = {
   system: { loggerOptions: { logLevel: LogLevel.Error } },
 };
 
+// Variables on the loginbutton
 export const apiScopes = [`api://${process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID}/access_as_user`];
 export const graphScopes = ["User.Read"]; // optional if you’ll call Graph from frontend

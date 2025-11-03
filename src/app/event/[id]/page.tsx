@@ -73,15 +73,15 @@ export default async function EventPage(props: Params) {
           <div className="row g-4">
             {/* Left: Image and Interactions */}
             <div className="col-md-7">
-              {/* Image Placeholder */}
+              {/* Image */}
               <div className="border border-black mb-3" style={{ width: "100%", aspectRatio: "4/3", position: "relative", background: "#f8f9fa" }}>
                 <img src={event?.iconImageUrl} width="100%" height="100%"/>
               </div>
               {/* Event Interaction */}
-              <div className="fw-semibold mb-2">Event Interaction</div>
+              <div className="fw-semibold mb-2" hidden={hasFeature("voting") || hasFeature("brackets")}>Event Interaction</div>
               <div className="mb-3 row">
                 <div className="col-2" hidden={hasFeature("voting")}>
-                  <div ><a href="#" className="me-3 text-decoration-underline">Voting</a></div>
+                  <div><a href="#" className="me-3 text-decoration-underline">Voting</a></div>
                 </div>
                 <div className="col-2" hidden={hasFeature("brackets")}>
                   <div><a href="#" className="text-decoration-underline">Brackets</a></div>
